@@ -1,0 +1,6 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_it_orden_servicio_salesman,it.orden.servicio salesman,model_it_orden_servicio,sales_team.group_sale_salesman,1,1,1,1
+access_it_tipo_trabajo_salesman,it.tipo.trabajo salesman,model_it_tipo_trabajo,sales_team.group_sale_salesman,1,0,0,0
+access_it_tipo_servicio_salesman,it.tipo.servicio salesman,model_it_tipo_servicio,sales_team.group_sale_salesman,1,0,0,0
+access_it_tipo_trabajo_manager,it.tipo.trabajo manager,model_it_tipo_trabajo,sales_team.group_sale_manager,1,1,1,1
+access_it_tipo_servicio_manager,it.tipo.servicio manager,model_it_tipo_servicio,sales_team.group_sale_manager,1,1,1,1

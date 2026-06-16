@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_order_form_informe_servicio" model="ir.ui.view">
+        <field name="name">sale.order.form.proyecto</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form"/>
+        <field name="arch" type="xml">
+            <field name="partner_id" position="before">
+                <field
+                    name="faena_id"
+                    options="{'no_create': True, 'no_create_edit': True}"
+                    domain="[('estado', 'in', ['licitacion', 'adjudicado', 'planificado', 'por_cobrar'])]"
+                    readonly="state in ['cancel', 'sale']"
+                />
+            </field>
+        </field>
+    </record>
+
+    <record id="sale_order_list_faena" model="ir.ui.view">
+        <field name="name">sale.order.list.proyecto</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.sale_order_tree"/>
+        <field name="arch" type="xml">
+            <field name="partner_id" position="before">
+                <field name="faena_id" string="Nombre de Servicio" optional="show"/>
+            </field>
+        </field>
+    </record>
+</odoo>

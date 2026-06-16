@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_faena_list" model="ir.ui.view">
+        <field name="name">it.proyecto.list</field>
+        <field name="model">it.orden.servicio</field>
+        <field name="inherit_id" eval="False"/>
+        <field name="arch" type="xml">
+            <list string="Proyectos" default_order="id desc">
+                <field name="name"/>
+                <field name="descripcion_servicio"/>
+                <field name="cliente_id"/>
+                <field name="establecimiento_id"/>
+                <field name="tipo_trabajo_id"/>
+                <field name="tipo_servicio_id"/>
+                <field name="cantidad_turnos"/>
+                <field name="quotation_count"/>
+                <field name="valor_final" sum="Total"/>
+                <field name="estado" widget="badge"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_faena_kanban" model="ir.ui.view">
+        <field name="name">it.proyecto.kanban</field>
+        <field name="model">it.orden.servicio</field>
+        <field name="inherit_id" eval="False"/>
+        <field name="arch" type="xml">
+            <kanban default_group_by="estado" class="o_kanban_small_column">
+                <field name="name"/>
+                <field name="descripcion_servicio"/>
+                <field name="estado"/>
+                <field name="cliente_id"/>
+                <field name="establecimiento_id"/>
+                <field name="tipo_servicio_id"/>
+                <field name="valor_final"/>
+                <templates>
+                    <t t-name="card">
+                        <div class="fw-bold fs-5"><field name="descripcion_servicio"/></div>
+                        <div class="text-muted"><field name="name"/></div>
+                        <div><field name="cliente_id"/></div>
+                        <div><field name="establecimiento_id"/></div>
+                        <div class="mt-2"><field name="tipo_servicio_id"/></div>
+                        <footer><field name="valor_final"/></footer>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <record id="view_faena_form" model="ir.ui.view">
+        <field name="name">it.proyecto.form</field>
+        <field name="model">it.orden.servicio</field>
+        <field name="inherit_id" eval="False"/>
+        <field name="arch" type="xml">
+            <form string="Proyecto">
+                <header>
+                    <button name="action_descartar" string="Descartar" type="object"
+                            invisible="estado != 'licitacion'"/>
+                    <button name="action_adjudicar" string="Adjudicar" type="object"
+                            class="oe_highlight" invisible="estado != 'licitacion'"/>
+                    <button name="action_planificar" string="Planificar" type="object"
+                            class="oe_highlight" invisible="estado != 'adjudicado'"/>
+                    <button name="action_cobrar" string="Cobrar" type="object"
+                            class="oe_highlight" invisible="estado != 'planificado'"/>
+                    <button name="action_cerrar" string="Cerrar" type="object"
+                            class="oe_highlight" invisible="estado != 'por_cobrar'"/>
+                    <field name="estado" widget="statusbar"
+                           statusbar_visible="licitacion,perdido,adjudicado,planificado,por_cobrar,cobrado"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_open_quotations"
+                                type="object"
+                                class="oe_stat_button"
+                                icon="fa-file-text-o">
+                            <field name="quotation_count" widget="statinfo" string="Cotizaciones"/>
+                        </button>
+                    </div>
+                    <div class="oe_title">
+                        <label for="name" string="Proyecto"/>
+                        <h1><field name="name" readonly="1"/></h1>
+                    </div>
+                    <group>
+                        <group string="Cliente">
+                            <field name="cliente_id" options="{'no_create_edit': True}"/>
+                            <field name="establecimiento_id" options="{'no_create_edit': True}"/>
+                            <field name="ito"/>
+                            <field name="numero_pedido"/>
+                        </group>
+                        <group string="Servicio">
+                            <field name="tipo_trabajo_id"/>
+                            <field name="tipo_servicio_id"/>
+                            <field name="cantidad_turnos"/>
+                            <field name="cantidad_equipos"/>
+                        </group>
+                    </group>
+                    <group>
+                        <field name="descripcion_servicio" required="1"/>
+                        <field name="observacion"/>
+                    </group>
+                    <notebook>
+                        <page string="Fechas" name="fechas">
+                            <group>
+                                <field name="fecha_adjudicacion"/>
+                                <field name="fecha_inicio_programada"/>
+                                <field name="fecha_termino_programada"/>
+                            </group>
+                        </page>
+                        <page string="Orden de Servicio" name="orden_servicio">
+                            <div class="alert alert-info" role="alert">
+                                Cotizaciones asociadas mediante el campo Nombre de Servicio.
+                            </div>
+                            <field name="quotation_ids"
+                                   context="{'default_faena_id': id, 'default_partner_id': cliente_id}">
+                                <list>
+                                    <field name="name"/>
+                                    <field name="partner_id"/>
+                                    <field name="client_order_ref"/>
+                                    <field name="user_id"/>
+                                    <field name="amount_untaxed"/>
+                                    <field name="amount_total"/>
+                                    <field name="zoc_incluida_valor_adjudicado" string="Base adjudicada"/>
+                                    <field name="state" widget="badge"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Valores" name="valores">
+                            <group>
+                                <field name="valor_adjudicado" readonly="1"/>
+                                <field name="valor_final" readonly="1"/>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_zoc_faenas" model="ir.actions.act_window">
+        <field name="name">Proyectos</field>
+        <field name="res_model">it.orden.servicio</field>
+        <field name="view_mode">list,kanban,form</field>
+        <field name="view_id" eval="False"/>
+        <field name="context">{'group_by': 'estado'}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Crea un nuevo Proyecto</p>
+        </field>
+    </record>
+
+    <record id="action_zoc_faenas_list" model="ir.actions.act_window.view">
+        <field name="sequence" eval="1"/>
+        <field name="view_mode">list</field>
+        <field name="view_id" ref="view_faena_list"/>
+        <field name="act_window_id" ref="action_zoc_faenas"/>
+    </record>
+
+    <record id="action_zoc_faenas_kanban" model="ir.actions.act_window.view">
+        <field name="sequence" eval="2"/>
+        <field name="view_mode">kanban</field>
+        <field name="view_id" ref="view_faena_kanban"/>
+        <field name="act_window_id" ref="action_zoc_faenas"/>
+    </record>
+
+    <record id="action_zoc_faenas_form" model="ir.actions.act_window.view">
+        <field name="sequence" eval="3"/>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="view_faena_form"/>
+        <field name="act_window_id" ref="action_zoc_faenas"/>
+    </record>
+
+    <menuitem id="menu_zoc_faenas"
+              name="Proyectos"
+              parent="sale.sale_order_menu"
+              action="action_zoc_faenas"
+              groups="sales_team.group_sale_salesman"
+              sequence="1"/>
+</odoo>

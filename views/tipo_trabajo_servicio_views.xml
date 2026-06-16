@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_it_tipo_trabajo_list" model="ir.ui.view">
+        <field name="name">it.tipo.trabajo.list</field>
+        <field name="model">it.tipo.trabajo</field>
+        <field name="arch" type="xml">
+            <list string="Tipos de trabajo">
+                <field name="name"/>
+                <field name="active"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_it_tipo_trabajo_form" model="ir.ui.view">
+        <field name="name">it.tipo.trabajo.form</field>
+        <field name="model">it.tipo.trabajo</field>
+        <field name="arch" type="xml">
+            <form string="Tipo de trabajo">
+                <sheet>
+                    <group>
+                        <field name="name"/>
+                        <field name="active"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_it_tipo_trabajo" model="ir.actions.act_window">
+        <field name="name">Tipos de trabajo</field>
+        <field name="res_model">it.tipo.trabajo</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <record id="view_it_tipo_servicio_list" model="ir.ui.view">
+        <field name="name">it.tipo.servicio.list</field>
+        <field name="model">it.tipo.servicio</field>
+        <field name="arch" type="xml">
+            <list string="Tipos de servicio">
+                <field name="name"/>
+                <field name="active"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_it_tipo_servicio_form" model="ir.ui.view">
+        <field name="name">it.tipo.servicio.form</field>
+        <field name="model">it.tipo.servicio</field>
+        <field name="arch" type="xml">
+            <form string="Tipo de servicio">
+                <sheet>
+                    <group>
+                        <field name="name"/>
+                        <field name="active"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_it_tipo_servicio" model="ir.actions.act_window">
+        <field name="name">Tipos de servicio</field>
+        <field name="res_model">it.tipo.servicio</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <menuitem id="menu_it_tipo_trabajo"
+              name="Tipos de trabajo"
+              parent="sale.menu_sale_config"
+              action="action_it_tipo_trabajo"
+              groups="sales_team.group_sale_manager"
+              sequence="95"/>
+
+    <menuitem id="menu_it_tipo_servicio"
+              name="Tipos de servicio"
+              parent="sale.menu_sale_config"
+              action="action_it_tipo_servicio"
+              groups="sales_team.group_sale_manager"
+              sequence="96"/>
+</odoo>
